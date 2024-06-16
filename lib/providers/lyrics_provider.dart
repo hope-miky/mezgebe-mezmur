@@ -23,13 +23,26 @@ class LyricsProvider with ChangeNotifier {
     }
   }
 
-  void filterLyrics(String query) {
+  void filterLyrics(String query) async {
     if (query.isEmpty) {
       fetchLyrics();
     } else {
-      _lyrics = _lyrics
-          .where((lyric) => lyric['title'].contains(query.toLowerCase()))
+      // _lyrics = _lyrics
+      //     .where((lyric) => lyric['title'].contains(query.toLowerCase()))
+      //     .toList();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('mezmurs')
+          .where(
+            Filter.or(
+              Filter("title", isEqualTo: query),
+              Filter("id", isEqualTo: query),
+            ),
+          )
+          .get();
+      _lyrics = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
+
       notifyListeners();
     }
   }

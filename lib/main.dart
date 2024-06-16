@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => LyricsProvider(),
       child: MaterialApp(
-        title: 'Song Lyrics',
+        title: 'Mezgebe Mezmur',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

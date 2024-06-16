@@ -54,7 +54,6 @@ class TopBar extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: 'Search lyrics, songs, and more',
                         prefixIcon: Icon(Icons.search),
-                        suffixIcon: Icon(Icons.mic),
                         fillColor: Colors.grey[200],
                         filled: true,
                         contentPadding: EdgeInsets.symmetric(
