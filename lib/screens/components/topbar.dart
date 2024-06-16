@@ -52,7 +52,7 @@ class TopBar extends StatelessWidget {
                     width: screen.width * 0.85,
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: 'Search lyrics, songs, and more',
+                        hintText: 'Search by key-words',
                         prefixIcon: Icon(Icons.search),
                         fillColor: Colors.grey[200],
                         filled: true,
