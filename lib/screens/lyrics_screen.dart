@@ -21,25 +21,49 @@ class LyricsScreen extends StatelessWidget {
                     itemCount: lyricsProvider.lyrics.length,
                     itemBuilder: (context, index) {
                       var lyric = lyricsProvider.lyrics[index];
-                      return ListTile(
-                        title: Text(lyric['title']),
-                        subtitle: Text(
-                          lyric['lyrics'][0],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 12,
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.grey[300]!,
+                            ),
                           ),
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LyricsDetailScreen(
-                              title: lyric['title'],
-                              artist: lyric['artist'],
-                              lyrics: lyric['lyrics'],
+                        child: ListTile(
+                          title: Text(lyric['title']),
+                          leading: Text(
+                            '${lyric['id']}',
+                            style: TextStyle(
+                              fontSize: 16,
                             ),
-                          ));
-                        },
+                          ),
+                          subtitle: Text(
+                            lyric['lyrics'][0],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.more_vert),
+                            onPressed: () {
+                              // Action for the more options button
+                            },
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LyricsDetailScreen(
+                                title: lyric['title'],
+                                artist: lyric['artist'],
+                                lyrics: lyric['lyrics'],
+                              ),
+                            ));
+                          },
+                        ),
                       );
                     },
                   );

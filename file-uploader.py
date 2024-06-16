@@ -23,6 +23,7 @@ def upload_songs_to_firestore(json_file_path):
             doc_ref = collection_ref.document(song['id'])
             # Prepare data
             data = {
+                'id': song['id'],
                 'title': song['title'],
                 'artist': song['artist'],
                 'lyrics': song['lyrics']

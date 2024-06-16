@@ -16,6 +16,7 @@ class LyricsProvider with ChangeNotifier {
       _lyrics = snapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
+
       notifyListeners();
     } catch (e) {
       print(e);
