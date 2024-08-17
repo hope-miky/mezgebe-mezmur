@@ -21,9 +21,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => LyricsProvider(),
       child: MaterialApp(
-        title: 'Mezgebe Mezmur',
+        title: 'መዝገበ መዝሙር',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          secondaryHeaderColor: Colors.teal,
         ),
         home: LyricsScreen(),
       ),

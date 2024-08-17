@@ -11,8 +11,10 @@ class LyricsProvider with ChangeNotifier {
 
   Future<void> fetchLyrics() async {
     try {
-      QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('mezmurs').get();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('mezmurs')
+          .orderBy('id', descending: false)
+          .get();
       _lyrics = snapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
@@ -27,22 +29,24 @@ class LyricsProvider with ChangeNotifier {
     if (query.isEmpty) {
       fetchLyrics();
     } else {
-      // _lyrics = _lyrics
-      //     .where((lyric) => lyric['title'].contains(query.toLowerCase()))
-      //     .toList();
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('mezmurs')
           .where(
             Filter.or(
-              Filter("title", isEqualTo: query),
+              Filter.and(
+                Filter("title", isGreaterThanOrEqualTo: query),
+                Filter("title", isLessThanOrEqualTo: "${query}\uf7ff"),
+              ),
               Filter("id", isEqualTo: query),
             ),
           )
+          .orderBy('id', descending: false)
           .get();
       _lyrics = snapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
 
+      print("Search results: ${_lyrics}");
       notifyListeners();
     }
   }

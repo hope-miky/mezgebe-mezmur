@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mezgebe_mezmur/providers/lyrics_provider.dart';
 import 'package:mezgebe_mezmur/screens/components/topbar.dart';
@@ -20,6 +21,8 @@ class _LyricsScreenState extends State<LyricsScreen>
 
   @override
   Widget build(BuildContext context) {
+    var screen = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Column(
         children: [
@@ -30,65 +33,78 @@ class _LyricsScreenState extends State<LyricsScreen>
                 if (lyricsProvider.lyrics.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
-                  return AnimationLimiter(
-                    child: ListView.builder(
-                      itemCount: lyricsProvider.lyrics.length,
-                      itemBuilder: (context, index) {
-                        var lyric = lyricsProvider.lyrics[index];
-                        return AnimationConfiguration.staggeredList(
-                          position: index,
-                          duration: const Duration(milliseconds: 375),
-                          child: SlideAnimation(
-                            verticalOffset: 50.0,
-                            child: FadeInAnimation(
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey[300]!,
-                                    ),
+                  return Container(
+                    margin: kIsWeb
+                        ? EdgeInsets.symmetric(horizontal: screen.width * 0.2)
+                        : EdgeInsets.zero,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                        itemCount: lyricsProvider.lyrics.length,
+                        itemBuilder: (context, index) {
+                          var lyric = lyricsProvider.lyrics[index];
+                          return AnimationConfiguration.staggeredList(
+                            position: index,
+                            duration: const Duration(milliseconds: 375),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 10,
                                   ),
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    lyric['title'],
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  leading: Text(
-                                    '${lyric['id']}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    lyric['lyrics'][0],
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  trailing: Icon(Icons.arrow_right,
-                                      color: Colors.grey[500]!),
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => LyricsDetailScreen(
-                                        title: lyric['title'],
-                                        artist: lyric['artist'],
-                                        lyrics: lyric['lyrics'],
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.grey[300]!,
                                       ),
-                                    ));
-                                  },
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      lyric['title'],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'NotoSans',
+                                      ),
+                                    ),
+                                    leading: Text(
+                                      '${lyric['id']}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      lyric['lyrics'][0],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'NotoSans',
+                                      ),
+                                    ),
+                                    trailing: Icon(Icons.arrow_right,
+                                        color: Colors.grey[500]!),
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            LyricsDetailScreen(
+                                          title: lyric['title'],
+                                          tags: lyric['tags'],
+                                          artist: lyric['artist'],
+                                          lyrics: lyric['lyrics'],
+                                        ),
+                                      ));
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   );
                 }

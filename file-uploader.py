@@ -19,11 +19,12 @@ def upload_songs_to_firestore(json_file_path):
     collection_ref = db.collection('mezmurs')
     
     for song in songs:
-        if int(song['id']) > 100:
+        if int(song['id']) > 124:
             doc_ref = collection_ref.document(str(song['id']))
             # Prepare data
             data = {
-                'id': song['id'],
+                'id': int(song['id']),
+                'tags': song['tags'],
                 'title': song['title'],
                 'artist': song['artist'],
                 'lyrics': song['lyrics']

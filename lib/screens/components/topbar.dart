@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mezgebe_mezmur/providers/lyrics_provider.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +12,8 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context).size;
     return Container(
-      width: screen.width,
-      height: screen.height * 0.25,
+      width: kIsWeb ? screen.width * .5 : screen.width,
+      height: kIsWeb ? screen.height * .3 : screen.height * 0.25,
       padding: EdgeInsets.only(
         top: 75,
         left: 20,
@@ -25,9 +26,9 @@ class TopBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text(
-                'Wellcome to',
+                'Welcome to',
                 style: TextStyle(
                   fontSize: 17,
                 ),
@@ -35,7 +36,7 @@ class TopBar extends StatelessWidget {
             ],
           ),
           Text(
-            'Mezgebe Mezmur',
+            'መዝገበ መዝሙር',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 27,
@@ -49,10 +50,13 @@ class TopBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: screen.width * 0.85,
+                    width: kIsWeb ? screen.width * .45 : screen.width * 0.85,
                     child: TextField(
+                      style: TextStyle(
+                        fontFamily: 'NotoSans',
+                      ),
                       decoration: InputDecoration(
-                        hintText: 'Search by key-words',
+                        hintText: 'Search by key words',
                         prefixIcon: Icon(Icons.search),
                         fillColor: Colors.grey[200],
                         filled: true,
