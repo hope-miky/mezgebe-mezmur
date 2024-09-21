@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mezgebe_mezmur/providers/lyrics_provider.dart';
+import 'package:mezgebe_mezmur/screens/components/bottom_nav.dart';
+import 'package:mezgebe_mezmur/screens/components/list_items.dart';
 import 'package:mezgebe_mezmur/screens/components/topbar.dart';
 import 'package:provider/provider.dart';
 import 'lyrics_detail_screen.dart';
@@ -59,45 +61,9 @@ class _LyricsScreenState extends State<LyricsScreen>
                                       ),
                                     ),
                                   ),
-                                  child: ListTile(
-                                    title: Text(
-                                      lyric['title'],
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.grey[700],
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'NotoSans',
-                                      ),
-                                    ),
-                                    leading: Text(
-                                      '${lyric['id']}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      lyric['lyrics'][0],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'NotoSans',
-                                      ),
-                                    ),
-                                    trailing: Icon(Icons.arrow_right,
-                                        color: Colors.grey[500]!),
-                                    onTap: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            LyricsDetailScreen(
-                                          title: lyric['title'],
-                                          tags: lyric['tags'],
-                                          artist: lyric['artist'],
-                                          lyrics: lyric['lyrics'],
-                                        ),
-                                      ));
-                                    },
+                                  child: AppMezmurListItem(
+                                    lyric: lyric,
+                                    lyricsProvider: lyricsProvider,
                                   ),
                                 ),
                               ),
@@ -113,6 +79,7 @@ class _LyricsScreenState extends State<LyricsScreen>
           ),
         ],
       ),
+      bottomNavigationBar: AppBottomNav(),
     );
   }
 }

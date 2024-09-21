@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
 
 class LyricsProvider with ChangeNotifier {
   List<Map<String, dynamic>> _lyrics = [];
   List<Map<String, dynamic>> get lyrics => _lyrics;
+  final Box _favoritesBox = Hive.box('favorites');
 
   LyricsProvider() {
     fetchLyrics();
@@ -48,6 +50,32 @@ class LyricsProvider with ChangeNotifier {
 
       print("Search results: ${_lyrics}");
       notifyListeners();
+    }
+  }
+
+  // Check if an item is marked as favorite
+  bool isFavorite(String itemId) {
+    return _favoritesBox.containsKey(itemId);
+  }
+
+  // Add an item to the favorite list
+  void addFavorite(String itemId) {
+    _favoritesBox.put(itemId, true);
+    notifyListeners();
+  }
+
+  // Remove an item from the favorite list
+  void removeFavorite(String itemId) {
+    _favoritesBox.delete(itemId);
+    notifyListeners();
+  }
+
+  // Toggle the favorite state
+  void toggleFavorite(String itemId) {
+    if (isFavorite(itemId)) {
+      removeFavorite(itemId);
+    } else {
+      addFavorite(itemId);
     }
   }
 }

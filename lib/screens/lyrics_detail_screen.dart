@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart'; // For Clipboard functionality
+import 'package:mezgebe_mezmur/providers/lyrics_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class LyricsDetailScreen extends StatelessWidget {
   final String title;
+  final String id;
   final String artist;
   final List<dynamic> lyrics;
   final List<dynamic> tags;
 
   LyricsDetailScreen({
+    required this.id,
     required this.title,
     required this.artist,
     required this.lyrics,
@@ -28,98 +32,126 @@ class LyricsDetailScreen extends StatelessWidget {
       return "Zemari: $artist \n Title: $title \n ----- $content  ";
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: SelectableText(
-          title,
-          style: TextStyle(
-            fontFamily: 'NotoSans',
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.copy),
-            onPressed: () {
-              // Copy the lyrics to the clipboard
-              Clipboard.setData(ClipboardData(text: prepareData()));
-
-              // Show a SnackBar to notify the user
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Mezmur copied to clipboard!')),
-              );
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {
-                // Share the lyrics using the share_plus package
-                Share.share(prepareData());
-              },
+    return Consumer<LyricsProvider>(
+      builder: (context, lyricsProvider, child) => Scaffold(
+        appBar: AppBar(
+          title: SelectableText(
+            title,
+            style: TextStyle(
+              fontFamily: 'NotoSans',
             ),
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SelectableText(
-                'Zemari: $artist',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'NotoSans',
-                ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: lyricsProvider.isFavorite(id) == true
+                  ? const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    )
+                  : const Icon(
+                      Icons.favorite_border,
+                      color: Colors.grey,
+                    ),
+              onPressed: () {
+                if (lyricsProvider.isFavorite(id) == true) {
+                  lyricsProvider.removeFavorite(id);
+                  // Show a SnackBar to notify the user
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Mezmur removed from favorite')),
+                  );
+                } else {
+                  lyricsProvider.addFavorite(id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Mezmur added to favorite')),
+                  );
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.copy),
+              onPressed: () {
+                // Copy the lyrics to the clipboard
+                Clipboard.setData(ClipboardData(text: prepareData()));
+
+                // Show a SnackBar to notify the user
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Mezmur copied to clipboard!')),
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                icon: Icon(Icons.share),
+                onPressed: () {
+                  // Share the lyrics using the share_plus package
+                  Share.share(prepareData());
+                },
               ),
-              SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: lyrics
-                      .map((ly) => SelectableText(
-                            ly,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'NotoSans',
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: screen.height * .05),
-                child: SizedBox(
-                  width: screen.width,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    children: tags
-                        .map((_tag) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "#$_tag",
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ))
-                        .toList() as List<Widget>,
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SelectableText(
+                  'Zemari: $artist',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NotoSans',
                   ),
                 ),
-              )
-            ],
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: lyrics
+                        .map((ly) => SelectableText(
+                              ly,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'NotoSans',
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: screen.height * .05),
+                  child: SizedBox(
+                    width: screen.width,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: tags
+                          .map((_tag) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "#$_tag",
+                                  style: const TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                          .toList() as List<Widget>,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

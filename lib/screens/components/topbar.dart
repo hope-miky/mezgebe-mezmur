@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mezgebe_mezmur/providers/lyrics_provider.dart';
+import 'package:mezgebe_mezmur/screens/components/menu_button.dart';
 import 'package:provider/provider.dart';
 
 class TopBar extends StatelessWidget {
@@ -50,7 +51,7 @@ class TopBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: kIsWeb ? screen.width * .45 : screen.width * 0.85,
+                    width: kIsWeb ? screen.width * .45 : screen.width * 0.82,
                     child: TextField(
                       style: TextStyle(
                         fontFamily: 'NotoSans',
@@ -73,6 +74,7 @@ class TopBar extends StatelessWidget {
                       },
                     ),
                   ),
+                  AppMenuBtn(),
                   // IconButton(
                   //   onPressed: () {},
                   //   color: Colors.white,
